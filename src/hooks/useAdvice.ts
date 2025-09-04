@@ -1,39 +1,52 @@
-import { useEffect, useState } from 'react'
-import { type Advice } from '../types/Advice.d'
+import { useCallback, useEffect, useState } from "react";
+import type { Advice } from "../types/advices";
+
+const ADVICE_URL = "https://api.adviceslip.com/advice";
 
 export default function useAdvice() {
-	const [advice, setAdvice] = useState<string>('')
-	const [adviceId, setAdviceId] = useState<number>(117)
-	const [rotate, setRotate] = useState<boolean>(false)
+	const [advice, setAdvice] = useState<string>("");
+	const [adviceId, setAdviceId] = useState<number>(117);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
+
+	const generateRandomInt = useCallback((min: number, max: number): number => {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}, []);
+
+	const getAdvice = useCallback(async () => {
+		setIsLoading(true);
+		setError(null);
+		try {
+			const response = await fetch(`${ADVICE_URL}/${adviceId}`);
+			if (!response.ok) {
+				throw new Error(
+					`Failed to fetch advice: ${response.status} ${response.statusText}`,
+				);
+			}
+			const data: Advice = await response.json();
+			setAdvice(data.slip.advice);
+		} catch (error) {
+			setError(
+				error instanceof Error ? error.message : "An unknown error occurred.",
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [adviceId]);
 
 	useEffect(() => {
-		fetch(`https://api.adviceslip.com/advice/${adviceId}`)
-			.then((res) => res.json())
-			.then((data: Advice) => setAdvice(data.slip.advice))
-			.catch((err: Error) => {
-				console.error(err.message)
-			})
-	}, [adviceId])
+		getAdvice();
+	}, [getAdvice]);
 
-	const handleClick = () => {
-		setAdviceId(getRandomInt(1, 224))
-		toggleRotate()
-	}
-
-	const toggleRotate = () => {
-		setRotate(!rotate)
-	}
-
-	const getRandomInt = (min: number, max: number) => {
-		min = Math.ceil(min)
-		max = Math.floor(max)
-		return Math.floor(Math.random() * (max - min) + min)
-	}
+	const handleClick = useCallback(() => {
+		setAdviceId(generateRandomInt(1, 224));
+	}, [generateRandomInt]);
 
 	return {
 		advice,
 		adviceId,
 		handleClick,
-		rotate,
-	}
+		isLoading,
+		error,
+	};
 }
