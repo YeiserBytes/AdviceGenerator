@@ -1,23 +1,69 @@
 @import "./consts.scss";
 
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    line-height: 1.5;
+    font-weight: 400;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    --font-dynamic-size: clamp(1.5rem, 1.2rem + 2vw, 2rem);
+}
+
 body {
-    font-family: $Manrope;
-    background: $Dark_blue;
-    color: $Light_cyan;
+    font-family: $font-family-manrope;
+    background: $dark-blue;
+    color: $light-cyan;
+    font-size: var(--font-dynamic-size);
 }
 
 #root {
     height: 100dvh;
     width: 100dvw;
-    display: grid;
-    place-content: center;
-}
-
-.container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '“';
+        position: absolute;
+        top: -180px;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 35rem;
+        background-size: cover;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    &::before {
+        content: '”';
+        position: absolute;
+        bottom: -40%;
+        right: -80%;
+        width: 100%;
+        height: 100%;
+        font-size: 35rem;
+        background-size: cover;
+        opacity: 0.1;
+        z-index: 0;
+    }
 }
 
 .card {
@@ -25,29 +71,38 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
-    background: $Dark_grayish_blue;
-    width: 475px;
-    min-height: 250px;
-    padding: 40px;
-    gap: 20px;
-    border-radius: 10px;
+    background: $dark-grayish-blue;
+    max-width: 35rem;
+    width: 90%;
+    min-height: 16rem;
+    padding: 2.5rem;
+    gap: 1.25rem;
+    border-radius: 1rem;
     position: relative;
-
-    h6 {
-        color: $Neon_green;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-    }
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 15px -10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
 
     p {
-        font-size: $Size;
+        color: $neon-green;
+        letter-spacing: 0.2rem;
+        text-transform: uppercase;
+        font-size: .75rem; // Slightly larger for better readability
+        text-align: center; // Align text to center for consistency
+    }
+
+    h1 {
+        font-size: var(--font-dynamic-size);
         text-align: center;
-        font-weight: $Bold;
+        font-weight: $font-weight-bold;
+        line-height: 1.5;
+        color: $light-cyan;
+        text-wrap: pretty; // Improved text wrapping for better appearance
+        hyphens: auto; // Enable hyphenation for better text flow
     }
 
 
     .divider {
-        margin-bottom: 25px;
+        margin-bottom: 0.5rem;
     }
 
     button {
@@ -55,43 +110,54 @@ body {
         justify-content: center;
         align-items: center;
         position: absolute;
-        bottom: -30px;
-        padding: 18px;
+        bottom: -2rem;
+        padding: 1.125rem;
         border: none;
         border-radius: 50%;
-        background-color: $Neon_green;
-        transition: box-shadow 0.3s ease-in-out;
+        background-color: $neon-green;
+        transition: box-shadow 300ms ease-in-out, transform 300ms ease-in-out;
         cursor: pointer;
 
         &:hover {
-            box-shadow: 0 0 35px $Neon_green;
+            box-shadow: 0 0 35px $neon-green, 0 0 15px lighten($neon-green, 10%);
+            transform: scale(1.1);
+        }
+
+        &:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 25px $neon-green;
         }
     }
-
 }
 
 .attribution {
     position: absolute;
-    bottom: 0;
-    font-size: .75em;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
     font-weight: normal;
+    text-align: center;
+    color: $light-cyan;
 
     a {
-        color: $Neon_green;
+        color: $neon-green;
         text-decoration: none;
-        
+        transition: all 300ms ease-in-out;
+
         &:hover {
             text-decoration: underline;
+            color: lighten($neon-green, 10%);
         }
     }
 }
 
 .rotateA {
-    animation: rotateRight .3s ease-in-out;
+    animation: rotateRight 0.3s ease-in-out forwards;
 }
 
 .rotateB {
-    animation: rotateLeft .3s ease-in-out;
+    animation: rotateLeft 0.3s ease-in-out forwards;
 }
 
 @keyframes rotateRight {
@@ -114,9 +180,9 @@ body {
     }
 }
 
-@media screen and (max-width: $Mobile) {
+@media screen and (max-width: $breakpoint-mobile) {
     .container {
-        width: auto;
-        padding: 0 20px;
+        width: 100%;
+        padding: 0 1.25rem;
     }
 }

@@ -1,18 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@800&display=swap');
 
 // Colors
-$Light_cyan: hsl(193, 38%, 86%);
-$Neon_green: hsl(150, 100%, 66%);
+$light-cyan: hsl(193, 38%, 86%);
+$neon-green: hsl(150, 100%, 66%) !default;
 
-$Drayish_blue: hsl(217, 19%, 38%);
-$Dark_grayish_blue: hsl(217, 19%, 24%);
-$Dark_blue: hsl(218, 23%, 16%);
+$grayish-blue: hsl(217, 19%, 38%);
+$dark-grayish-blue: hsl(217, 19%, 24%);
+$dark-blue: hsl(218, 23%, 16%);
 
-// font
-$Manrope: 'Manrope', sans-serif;
-$Size: 28px;
-$Bold: 800;
+// Typography
+$font-family-manrope: 'Manrope', sans-serif;
+$font-size-base: 1.75rem;
+$font-size-lg: 2rem;
 
-// breackpoint
-$Mobile: 768px;
-$Desktop: 1440px;
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+
+// Breakpoints
+$breakpoint-mobile: 768px;
+$breakpoint-desktop: 1440px;
+

@@ -1,43 +1,60 @@
-import './App.scss'
-import useSEO from './hooks/useSEO'
-import useAdvice from './hooks/useAdvice'
-import Dividers from './components/Dividers'
-import Footer from './components/Footer'
-import { useMediaQuery } from 'react-responsive'
+import clsx from "clsx";
+import { useMediaQuery } from "react-responsive";
+import { Toaster, toast } from "sonner";
+import "./App.scss";
+import Dividers from "./components/Dividers";
+import Footer from "./components/Footer";
+import useAdvice from "./hooks/useAdvice";
+import useSEO from "./hooks/useSEO";
 
 export default function App() {
-	const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
-	const { advice, adviceId, handleClick, rotate } = useAdvice()
+	const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+	const { advice, adviceId, handleClick, isLoading, error } = useAdvice();
+
+	// Trigger toast only when error changes
+	if (error) {
+		toast.error(error, {
+			duration: 4000,
+			action: {
+				label: "Try again",
+				onClick: handleClick,
+			},
+		});
+	}
 
 	useSEO({
 		title: `#${adviceId} - Advice generator`,
-    description: "",
-	})
+		description: `Get random advice #${adviceId} and many more!`,
+	});
 
 	return (
-		<main className='container'>
-			<article className='card'>
-				<h6>Advice #{adviceId}</h6>
-				<p>{`“${advice}”`}</p>
-				<Dividers
-					query={isMobile}
-					className='divider'
-				/>
-				<button onClick={handleClick}>
+		<>
+			<section className="card">
+				<p className="advice-id">Advice #{adviceId}</p>
+				<h1 className="advice-text">{`“${advice}”`}</h1>
+				<Dividers query={isMobile} className="divider" />
+				<button
+					type="button"
+					onClick={handleClick}
+					aria-label="Generate new advice"
+					className="dice-button"
+				>
 					<svg
-						width='24'
-						className={rotate ? 'rotateA' : 'rotateB'}
-						height='24'
-						xmlns='http://www.w3.org/2000/svg'
+						width="24"
+						height="24"
+						className={clsx({ rotateA: isLoading, rotateB: !isLoading })}
+						xmlns="http://www.w3.org/2000/svg"
 					>
+						<title>Dice icon</title>
 						<path
-							d='M20 0H4a4.005 4.005 0 0 0-4 4v16a4.005 4.005 0 0 0 4 4h16a4.005 4.005 0 0 0 4-4V4a4.005 4.005 0 0 0-4-4ZM7.5 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z'
-							fill='#202733'
+							d="M20 0H4a4.005 4.005 0 0 0-4 4v16a4.005 4.005 0 0 0 4 4h16a4.005 4.005 0 0 0 4-4V4a4.005 4.005 0 0 0-4-4ZM7.5 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"
+							fill="#202733"
 						/>
 					</svg>
 				</button>
-			</article>
-			<Footer author='YeiserBytes' />
-		</main>
-	)
+			</section>
+			<Toaster richColors />
+			<Footer author="YeiserBytes" />
+		</>
+	);
 }
